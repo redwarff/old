@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="piechart.css">
+</head>
+
+<body>
+  <div class="form">
+    <h1>Figure information and data</h1>
+    <label for="figureName">Figure name</label>
+    <input type="text" id="figureName" placeholder="Favourite leisure activity of teenagers"></input>
+    <button id="exportBtn">Export to PNG</button>
+    <button id="saveBtn">Save to local storage</button>
+    <h2>Add item</h2>
+    <label for="name">Item name</label>
+    <input type="text" id="name" placeholder="Playing Minecraft"></input>
+    <label for="count">Count</label>
+    <input type="text" id="count" placeholder="260"></input>
+    <label for="color">Color</label>
+    <input type="color" id="color"></input>
+    <button id="addBtn">Add item</button>
+        <button id="deleteAllBtn">Delete all items</button>
+
+    <div class="warning"></div>
+    <h2 class="items">Items</h2>
+    <table></table>
+  </div>
+  <div class="canvas">
+    <canvas width="700" height="400"></canvas>
+  </div>
+  <script src="piechart.js"></script>
+</body>
+
+</html>
