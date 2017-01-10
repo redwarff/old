@@ -88,7 +88,7 @@ var showLoad = function (x,y) {
     div.appendChild(ul);
     document.body.appendChild(div);
     popupDiv = div;
-    clickListener = document.body.addEventListener('click', function () {
+    clickListener = document.body.addEventListener('click', function (e) {
       hideLoad();
     });
   }
