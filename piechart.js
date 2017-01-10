@@ -68,6 +68,7 @@ var showLoad = function (x, y) {
       var deleteBtn = document.createElement('button');
       deleteBtn.textContent = 'Delete';
       deleteBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
         deleteChart(item, localData);
         hideLoad();
         showLoad(x, y);
