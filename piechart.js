@@ -25,6 +25,7 @@ saveBtn.addEventListener('click', function (e) {
   save();
 });
 loadBtn.addEventListener('click', function (e) {
+  e.stopPropagation();
   showLoad(e.clientX, e.clientY);
 });
 figureNameInput.addEventListener('input', function (e) {
@@ -40,24 +41,23 @@ var results;
 var header;
 
 var init = function () {
-    results = [
-      { name: "Watching \"let's plays\"", count: 267, color: "lightblue" },
-      { name: "Playing minecraft", count: 389, color: "lightgreen" },
-      { name: "Drinking alcohol", count: 114, color: "pink" },
-      { name: "Spamming comment sections", count: 189, color: "silver" }
-    ];
-    header = 'Favorite leisure activity of teenagers';
+  results = [
+    { name: "Watching \"let's plays\"", count: 267, color: "lightblue" },
+    { name: "Playing minecraft", count: 389, color: "lightgreen" },
+    { name: "Drinking alcohol", count: 114, color: "pink" },
+    { name: "Spamming comment sections", count: 189, color: "silver" }
+  ];
+  header = 'Favorite leisure activity of teenagers';
 }
-var deleteChart = function (chart,localData){
-  localData.charts.splice(localData.charts.indexOf(chart),1);
+var deleteChart = function (chart, localData) {
+  localData.charts.splice(localData.charts.indexOf(chart), 1);
   save(localData);
 }
-var showLoad = function (x,y) {
+var showLoad = function (x, y) {
   hideLoad();
   var localData;
-  if(localStorage.localData) localData = JSON.parse(localStorage.localData);
+  if (localStorage.localData) localData = JSON.parse(localStorage.localData);
   if (localData) {
-    event.stopPropagation();
     var div = document.createElement('div');
     div.className = 'popup';
     div.style.left = x + 'px';
@@ -67,15 +67,15 @@ var showLoad = function (x,y) {
       var li = document.createElement('li');
       var deleteBtn = document.createElement('button');
       deleteBtn.textContent = 'Delete';
-      deleteBtn.addEventListener('click', function(e){
-        deleteChart(item,localData);
+      deleteBtn.addEventListener('click', function (e) {
+        deleteChart(item, localData);
         hideLoad();
-        showLoad(x,y);
+        showLoad(x, y);
       });
       li.appendChild(deleteBtn);
       var a = document.createElement('a');
       a.textContent = item.name;
-      a.href="#";
+      a.href = "#";
       li.appendChild(a);
       li.addEventListener('click', function (e) {
         load(item);
@@ -101,7 +101,7 @@ var load = function (chart) {
 var hideLoad = function () {
   if (popupDiv) document.body.removeChild(popupDiv);
   popupDiv = null;
-  if(clickListener) document.body.removeEventListener('click', clickListener);
+  if (clickListener) document.body.removeEventListener('click', clickListener);
 }
 var deleteAllItems = function () {
   results = [];
@@ -112,7 +112,7 @@ var exportImg = function () {
   window.open(image);
 }
 var save = function (customLocalData) {
-  if(customLocalData) {
+  if (customLocalData) {
     localStorage.localData = JSON.stringify(customLocalData);
     return;
   }
