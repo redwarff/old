@@ -101,7 +101,7 @@ var load = function (chart) {
 var hideLoad = function () {
   if (popupDiv) document.body.removeChild(popupDiv);
   popupDiv = null;
-  document.body.removeEventListener('click', clickListener);
+  if(clickListener) document.body.removeEventListener('click', clickListener);
 }
 var deleteAllItems = function () {
   results = [];
