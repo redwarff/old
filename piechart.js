@@ -1,4 +1,3 @@
-var header;
 var cx = document.querySelector("canvas").getContext("2d");
 var figureNameInput = document.querySelector('#figureName');
 var nameInput = document.querySelector('#name');
@@ -8,6 +7,9 @@ var addBtn = document.querySelector('#addBtn');
 var exportBtn = document.querySelector('#exportBtn');
 var deleteAllBtn = document.querySelector('#deleteAllBtn');
 var saveBtn = document.querySelector('#saveBtn');
+var loadBtn = document.querySelector('#loadBtn');
+var popupDiv;
+var clickListener;
 
 addBtn.addEventListener('click', function (e) {
   addItem();
@@ -16,28 +18,92 @@ exportBtn.addEventListener('click', function (e) {
   exportImg();
 });
 deleteAllBtn.addEventListener('click', function (e) {
-  deleteAll();
+  deleteAllItems();
   render();
 });
 saveBtn.addEventListener('click', function (e) {
   save();
+});
+loadBtn.addEventListener('click', function (e) {
+  showLoad(e.clientX, e.clientY);
 });
 figureNameInput.addEventListener('input', function (e) {
   header = figureNameInput.value;
   render();
 });
 
+// preventing incompatibility errors with older versions
+if (localStorage.localData && !JSON.parse(localStorage.localData).charts) localStorage.removeItem('localData');
 
 // data to be rendered
-var localData = localStorage.localData ? JSON.parse(localStorage.localData) : null;
-var results = localData ? localData.results : [
-  { name: "Watching \"let's plays\"", count: 267, color: "lightblue" },
-  { name: "Playing minecraft", count: 389, color: "lightgreen" },
-  { name: "Drinking alcohol", count: 114, color: "pink" },
-  { name: "Spamming comment sections", count: 189, color: "silver" }
-];
-header = localData ? localData.header : 'Favorite leisure activity of teenagers';
-var deleteAll = function () {
+var results;
+var header;
+
+var init = function () {
+    results = [
+      { name: "Watching \"let's plays\"", count: 267, color: "lightblue" },
+      { name: "Playing minecraft", count: 389, color: "lightgreen" },
+      { name: "Drinking alcohol", count: 114, color: "pink" },
+      { name: "Spamming comment sections", count: 189, color: "silver" }
+    ];
+    header = 'Favorite leisure activity of teenagers';
+}
+var deleteChart = function (chart,localData){
+  localData.charts.splice(localData.charts.indexOf(chart),1);
+  save(localData);
+}
+var showLoad = function (x,y) {
+  hideLoad();
+  var localData;
+  if(localStorage.localData) localData = JSON.parse(localStorage.localData);
+  if (localData) {
+    event.stopPropagation();
+    var div = document.createElement('div');
+    div.className = 'popup';
+    div.style.left = x + 'px';
+    div.style.top = y + 'px';
+    var ul = document.createElement('ul');
+    var createListItem = function (item) {
+      var li = document.createElement('li');
+      var deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.addEventListener('click', function(e){
+        deleteChart(item,localData);
+        hideLoad();
+        showLoad(x,y);
+      });
+      li.appendChild(deleteBtn);
+      var a = document.createElement('a');
+      a.textContent = item.name;
+      a.href="#";
+      li.appendChild(a);
+      li.addEventListener('click', function (e) {
+        load(item);
+        render();
+        hideLoad();
+      });
+      ul.appendChild(li);
+    }
+    localData.charts.forEach(createListItem);
+    div.appendChild(ul);
+    document.body.appendChild(div);
+    popupDiv = div;
+    clickListener = document.body.addEventListener('click', function () {
+      hideLoad();
+    });
+  }
+  else if (!localData) alert('No data in localStorage');
+}
+var load = function (chart) {
+  header = chart.name;
+  results = chart.results;
+}
+var hideLoad = function () {
+  if (popupDiv) document.body.removeChild(popupDiv);
+  popupDiv = null;
+  document.body.removeEventListener('click', clickListener);
+}
+var deleteAllItems = function () {
   results = [];
 }
 var exportImg = function () {
@@ -45,17 +111,23 @@ var exportImg = function () {
   var image = canvas.toDataURL("image/png");
   window.open(image);
 }
-var save = function () {
-  var localData = {
-    header: header,
+var save = function (customLocalData) {
+  if(customLocalData) {
+    localStorage.localData = JSON.stringify(customLocalData);
+    return;
+  }
+  var localData = localStorage.localData ? JSON.parse(localStorage.localData) : { charts: [] };
+  var chart = {
+    name: header,
     results: results
   }
+  localData.charts.push(chart);
   localStorage.localData = JSON.stringify(localData);
   alert('Figure saved to localStorage');
 }
 var renderTable = function () {
   var table = document.createElement("table");
-
+  table.className = 'results';
   var renderTableItem = function (item) {
     var tableRow = document.createElement("tr");
     for (var i = 1; i <= 5; i++) {
@@ -119,6 +191,11 @@ var addItem = function () {
     alert('Count must be a number!');
     return;
   }
+  if (count < 0) {
+    countInput.focus();
+    alert('Count must be positive!');
+    return;
+  }
   var color = colorInput.value;
   results.push({
     name: name,
@@ -179,6 +256,7 @@ var render = function () {
   renderBody();
   renderTable();
 }
+init();
 render();
 if (localStorage.localData) figureNameInput.value = header;
 figureNameInput.focus();

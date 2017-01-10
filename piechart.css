@@ -44,7 +44,7 @@
       font-size: 1.8em;
       letter-spacing: 1px;
     }
-    table {
+    table.results {
       border-collapse: collapse;
     }
     h2 {
@@ -53,4 +53,21 @@
     }
     h2.items {
       margin-top: 20px;
+    }
+    div.popup {
+      position: absolute;
+      box-shadow: 5px 5px 4px 2px;
+      padding: 10px;
+      background-color: white;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    a {
+      color: #E74C3C;
+    }
+    a:hover {
+      color: limegreen;
     }
