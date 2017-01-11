@@ -26,7 +26,7 @@ saveBtn.addEventListener('click', function (e) {
 });
 loadBtn.addEventListener('click', function (e) {
   e.stopPropagation();
-  showLoad(e.clientX, e.clientY);
+  showLoad(e.pageX, e.pageY);
 });
 figureNameInput.addEventListener('input', function (e) {
   header = figureNameInput.value;
@@ -42,10 +42,10 @@ var header;
 
 var init = function () {
   results = [
-    { name: "Watching \"let's plays\"", count: 267, color: "lightblue" },
-    { name: "Playing minecraft", count: 389, color: "lightgreen" },
-    { name: "Drinking alcohol", count: 114, color: "pink" },
-    { name: "Spamming comment sections", count: 189, color: "silver" }
+    { name: "Watching \"let's plays\"", count: 267, color: "#3498DB" },
+    { name: "Playing minecraft", count: 389, color: "#2ECC71" },
+    { name: "Drinking alcohol", count: 114, color: "#9B59B6" },
+    { name: "Spamming comment sections", count: 189, color: "#7F8C8D" }
   ];
   header = 'Favorite leisure activity of teenagers';
 }
